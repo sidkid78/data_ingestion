@@ -1,0 +1,39 @@
+# Azure OpenAI Configuration
+azure_openai:
+  endpoint: ${AZURE_OPENAI_ENDPOINT}
+  deployment_name: ${AZURE_OPENAI_DEPLOYMENT_NAME}
+  api_version: "2023-12-01-preview"
+  api_key: ${AZURE_OPENAI_API_KEY}
+
+# Azure Cognitive Services Configuration
+azure_cognitive:
+  endpoint: ${AZURE_COGNITIVE_ENDPOINT}
+  key: ${AZURE_COGNITIVE_KEY}
+
+# Azure Cognitive Search Configuration
+azure_search:
+  endpoint: ${AZURE_SEARCH_ENDPOINT}
+  key: ${AZURE_SEARCH_KEY}
+  index_name: "documents"
+  semantic_config_name: "default"
+
+# Model Settings
+model_settings:
+  max_tokens: 2000
+  temperature: 0.7
+  top_p: 0.95
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+# Retrieval Settings
+retrieval:
+  max_results: 10
+  relevance_threshold: 0.7
+  reranking_enabled: true
+
+# Synthesis Settings
+synthesis:
+  max_summary_length: 1000
+  max_key_points: 5
+  include_metadata: true
+  include_references: true 
