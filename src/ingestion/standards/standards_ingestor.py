@@ -164,7 +164,7 @@ class StandardsIngestor(BaseIngestor, LoggerMixin):
                     ).strftime("%Y-%m-%d")
 
                 # Add timestamps
-                doc["created_at"] = datetime.utcnow().isoformat()
+                doc["created_at"] = datetime.now(datetime.UTC).isoformat()
                 doc["updated_at"] = doc["created_at"]
 
                 transformed.append(doc)

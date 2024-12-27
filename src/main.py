@@ -49,7 +49,7 @@ standards_ingestor = StandardsIngestor(config)
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "healthy", "timestamp": datetime.now(datetime.UTC).isoformat()}
 
 
 @app.get("/")
