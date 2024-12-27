@@ -1,0 +1,75 @@
+# Application Configuration
+
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: true
+  prefix: "/api/v1"
+
+# Data Sources
+data_sources:
+  federal_register:
+    api_url: "https://www.federalregister.gov/api/v1"
+    update_interval: 3600  # seconds
+  far_dfars:
+    base_url: "https://www.acquisition.gov"
+    update_interval: 86400  # seconds
+
+# Storage Configuration
+storage:
+  azure_blob:
+    container_name: "documents"
+    connection_string_env: "AZURE_STORAGE_CONNECTION_STRING"
+  
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "knowledge_db"
+    user_env: "POSTGRES_USER"
+    password_env: "POSTGRES_PASSWORD"
+  
+  neo4j:
+    uri: "bolt://localhost:7687"
+    user_env: "NEO4J_USER"
+    password_env: "NEO4J_PASSWORD"
+
+# Processing Settings
+processing:
+  max_workers: 4
+  batch_size: 100
+  retry_attempts: 3
+  retry_delay: 5  # seconds
+
+# Validation Rules
+validation:
+  yaml:
+    strict_mode: true
+    allow_duplicates: false
+  
+  metadata:
+    required_fields:
+      - "title"
+      - "document_type"
+      - "publication_date"
+      - "source"
+    
+    controlled_vocabularies:
+      document_types:
+        - "regulation"
+        - "standard"
+        - "guidance"
+        - "policy"
+      
+      sources:
+        - "federal_register"
+        - "far_dfars"
+        - "iso"
+        - "ansi"
+        - "nist"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/app.log" 
