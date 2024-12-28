@@ -79,7 +79,7 @@ Thumbs.db
 .cursorrules
 
 # Node Modules
-node_modules/
+node_modules
 
 # Large Files
 *.zip
@@ -115,3 +115,6 @@ node_modules/
 *.tiff
 *.bmp
 
+node_modules
+node_modules
+node_modules
