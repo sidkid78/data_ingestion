@@ -1,29 +1,27 @@
-from typing import Any, Dict, List, Optional, Set
+"""Neo4j database connector."""
+
+from neo4j import AsyncGraphDatabase
+from typing import Dict, Any, List, Optional
+import os
 from datetime import datetime
-import json
 
-from neo4j import AsyncGraphDatabase, AsyncDriver
+from utils.logging import LoggerMixin
+from utils.error_handling import StorageError
 from neo4j.exceptions import ServiceUnavailable, AuthError
-
-from ..utils.logging import LoggerMixin
-from ..utils.error_handling import StorageError, retry
-
+from utils.error_handling import retry
 
 class Neo4jConnector(LoggerMixin):
-    """
-    Connector for Neo4j graph database operations.
-    Handles document relationships and graph queries.
-    """
+    """Neo4j database connector class."""
 
-    def __init__(self, config: Dict[str, Any]):
-        """
-        Initialize Neo4j connector.
-        
-        Args:
-            config: Neo4j configuration dictionary
-        """
-        self.config = config
-        self.driver: Optional[AsyncDriver] = None
+    def __init__(self, config: Dict[str, Any] = None):
+        """Initialize Neo4j connector with configuration."""
+        super().__init__()
+        self.config = config or {
+            "uri": os.getenv("NEO4J_URI"),
+            "user": os.getenv("NEO4J_USER"),
+            "password": os.getenv("NEO4J_PASSWORD")
+        }
+        self.driver = None
 
     async def initialize(self) -> None:
         """

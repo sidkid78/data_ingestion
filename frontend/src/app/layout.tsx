@@ -1,47 +1,41 @@
-import { Metadata } from 'next';
+import type { Metadata, Viewport} from 'next';
 import { Inter } from 'next/font/google';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
-import '@/styles/globals.css';
+import { QueryProvider } from '@/components/QueryProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Document Management System',
   description: 'A system for managing and analyzing regulatory documents',
-  viewport: 'width=device-width, initial-scale=1',
 };
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
-interface RootLayoutProps {
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
       <body className={cn(
         'min-h-screen bg-background font-sans antialiased',
         inter.className
       )}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProvider>
             <div className="relative flex min-h-screen flex-col">
               <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="container flex h-14 items-center">
@@ -51,22 +45,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     </a>
                   </div>
                   <nav className="flex items-center space-x-6 text-sm font-medium">
-                    <a
-                      href="/documents"
-                      className="transition-colors hover:text-foreground/80"
-                    >
+                    <a href="/documents" className="transition-colors hover:text-foreground/80">
                       Documents
                     </a>
-                    <a
-                      href="/ingestion"
-                      className="transition-colors hover:text-foreground/80"
-                    >
+                    <a href="/ingestion" className="transition-colors hover:text-foreground/80">
                       Ingestion
                     </a>
-                    <a
-                      href="/analytics"
-                      className="transition-colors hover:text-foreground/80"
-                    >
+                    <a href="/analytics" className="transition-colors hover:text-foreground/80">
                       Analytics
                     </a>
                   </nav>
@@ -86,8 +71,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </footer>
             </div>
             <Toaster />
-          </ThemeProvider>
-        </QueryClientProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

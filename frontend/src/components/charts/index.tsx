@@ -1,9 +1,10 @@
+'use client';
+
 import React from 'react';
 import {
   BarChart as RechartsBarChart,
   Bar,
   LineChart as RechartsLineChart,
-  Line,
   PieChart as RechartsPieChart,
   Pie,
   Cell,

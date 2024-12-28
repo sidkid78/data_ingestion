@@ -1,6 +1,4 @@
-"""
-Standards document ingestor implementation.
-"""
+"""Standards data ingestion module."""
 
 import aiohttp
 import asyncio
@@ -10,9 +8,9 @@ from typing import Any, Dict, List, Optional
 import re
 import logging
 
-from ..base_ingestor import BaseIngestor
-from ...utils.error_handling import DataIngestionError, retry
-from ...utils.logging import LoggerMixin
+from ingestion.base_ingestor import BaseIngestor
+from utils.error_handling import DataIngestionError, retry
+from utils.logging import LoggerMixin
 
 
 class StandardsIngestor(BaseIngestor, LoggerMixin):

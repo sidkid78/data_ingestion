@@ -1,13 +1,16 @@
+"""Document routes for the API."""
+
 from typing import List, Optional
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
+import os
 
-from ..storage.postgresql_connector import PostgreSQLConnector
-from ..storage.neo4j_connector import Neo4jConnector
-from ..utils.config_loader import AppConfig
-from ..utils.error_handling import handle_exceptions, StorageError
-from ..utils.logging import get_logger
+from storage.postgresql_connector import PostgreSQLConnector
+from storage.neo4j_connector import Neo4jConnector
+from utils.config_loader import AppConfig
+from utils.error_handling import handle_exceptions, StorageError
+from utils.logging import get_logger
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 logger = get_logger(__name__)

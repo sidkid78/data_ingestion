@@ -1,0 +1,40 @@
+id: "legal_advisor_001"
+name: "Legal Compliance Advisor"
+role: "legal_advisor"
+domain: "legal"
+expertise_level: "expert"
+certifications:
+  - "JD"
+  - "Bar Association Member"
+  - "Regulatory Compliance Certified"
+
+capabilities:
+  - "regulatory_analysis"
+  - "compliance_verification"
+  - "legal_research"
+  - "risk_assessment"
+  - "policy_review"
+  - "contract_analysis"
+
+access_level: 3  # Higher access for legal matters
+
+metadata:
+  specialization: "regulatory_compliance"
+  jurisdiction: "federal"
+  industry_focus: "general"
+  language: "en-US"
+  version: "1.0.0"
+
+decision_heuristics:
+  risk_tolerance: "conservative"
+  precedent_weight: "high"
+  compliance_priority: "strict"
+
+knowledge_bases:
+  - "federal_regulations"
+  - "case_law"
+  - "compliance_guidelines"
+  - "industry_standards"
+
+created_at: "2024-01-01T00:00:00Z"
+updated_at: "2024-01-01T00:00:00Z" 

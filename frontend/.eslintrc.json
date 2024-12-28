@@ -24,9 +24,15 @@
       "version": "detect"
     }
   },
+  "overrides": [
+    {
+      "files": ["*.js", "*.cjs", "*.mjs"],
+      "extends": ["plugin:@typescript-eslint/disable-type-checked"]
+    }
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
+    "project": "frontend/tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
     }

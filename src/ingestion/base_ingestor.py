@@ -1,9 +1,9 @@
-from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
-from datetime import datetime
+"""Base ingestor class for all data ingestion."""
 
-from ..utils.logging import LoggerMixin
-from ..utils.error_handling import DataIngestionError, retry
+from abc import ABC, abstractmethod
+from typing import Dict, Any, List
+from utils.logging import LoggerMixin
+from utils.error_handling import DataIngestionError, retry
 
 
 class BaseIngestor(ABC, LoggerMixin):

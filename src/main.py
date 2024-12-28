@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from ingestion.acquisition.federal_register_ingestor import FederalRegisterIngestor
 from ingestion.acquisition.far_dfars_ingestor import FarDfarsIngestor
 from ingestion.standards.standards_ingestor import StandardsIngestor
+from routers import document_routes, ingestion_routes, federal_register_routes
 from utils.config_loader import load_config
 from utils.logging import setup_logging
 
@@ -34,11 +35,16 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(document_routes.router, prefix="/api/v1")
+app.include_router(ingestion_routes.router, prefix="/api/v1")
+app.include_router(federal_register_routes.router)
 
 # Initialize ingestors
 federal_register_ingestor = FederalRegisterIngestor(config)

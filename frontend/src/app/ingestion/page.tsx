@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -17,8 +19,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Progress } from '@/components/ui/progress';
-import { useToast } from '@/components/ui/use-toast';
-import { triggerIngestion, checkIngestionStatus } from '@/services/api';
+import { useToast } from '@/hooks/use-toast';
+import { triggerIngestion } from '@/services/api';
 import { IngestionJob } from '@/types';
 
 export default function IngestionPage() {
@@ -58,7 +60,7 @@ export default function IngestionPage() {
         });
         queryClient.invalidateQueries(['ingestion-jobs']);
       },
-      onError: (error) => {
+      onError: (error: any) => { 
         toast({
           title: 'Error',
           description: 'Failed to start ingestion job. Please try again.',
@@ -105,7 +107,7 @@ export default function IngestionPage() {
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
-            <Select value={source} onValueChange={setSource}>
+            <Select value={source || ''} onValueChange={setSource}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Select source" />
               </SelectTrigger>
@@ -116,7 +118,7 @@ export default function IngestionPage() {
               </SelectContent>
             </Select>
 
-            <Select value={documentType} onValueChange={setDocumentType}>
+            <Select value={documentType || ''} onValueChange={setDocumentType}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Document type" />
               </SelectTrigger>

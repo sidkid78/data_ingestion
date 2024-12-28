@@ -1,0 +1,274 @@
+/* XAI Visualization Styles */
+
+.explanation-view {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.explanation-summary {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.explanation-summary h3 {
+  margin: 0 0 1rem;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.explanation-summary p {
+  margin: 0;
+  color: #34495e;
+  line-height: 1.6;
+}
+
+.visualization-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.visualization-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.visualization-section h4 {
+  margin: 0 0 1rem;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* Decision Tree Styles */
+.decision-tree {
+  width: 100%;
+  height: 600px;
+}
+
+.decision-tree .link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+.decision-tree .node circle {
+  stroke: #fff;
+  stroke-width: 3px;
+}
+
+.decision-tree .node text {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+}
+
+/* Sankey Diagram Styles */
+.sankey-diagram {
+  width: 100%;
+  height: 400px;
+}
+
+.sankey-diagram .link {
+  fill: none;
+  stroke: #ccc;
+  stroke-opacity: 0.2;
+}
+
+.sankey-diagram .link:hover {
+  stroke-opacity: 0.5;
+}
+
+.sankey-diagram .node rect {
+  cursor: pointer;
+  fill-opacity: 0.9;
+}
+
+.sankey-diagram .node text {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  pointer-events: none;
+}
+
+/* Evidence Network Styles */
+.evidence-network {
+  width: 100%;
+  height: 600px;
+}
+
+.evidence-network line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.evidence-network circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
+.evidence-network text {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  pointer-events: none;
+}
+
+/* Metrics Visualization Styles */
+.metrics-visualization {
+  width: 100%;
+  height: 400px;
+}
+
+.metrics-visualization .arc path {
+  stroke: #fff;
+}
+
+.metrics-visualization .arc text {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+}
+
+/* Explanation Components Styles */
+.explanation-components {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.component-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.component-card h4 {
+  margin: 0 0 1rem;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.component-card p {
+  margin: 0 0 1rem;
+  color: #34495e;
+  line-height: 1.5;
+}
+
+.confidence-bar {
+  height: 6px;
+  background-color: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .explanation-view {
+    padding: 1rem;
+  }
+
+  .visualization-container {
+    grid-template-columns: 1fr;
+  }
+
+  .visualization-section {
+    padding: 1rem;
+  }
+
+  .decision-tree,
+  .evidence-network {
+    height: 400px;
+  }
+
+  .sankey-diagram,
+  .metrics-visualization {
+    height: 300px;
+  }
+}
+
+/* Interactive Elements */
+.interactive-element {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.interactive-element:hover {
+  opacity: 0.8;
+}
+
+/* Tooltips */
+.visualization-tooltip {
+  position: absolute;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .explanation-view {
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .visualization-container {
+    page-break-inside: avoid;
+  }
+
+  .visualization-section {
+    break-inside: avoid;
+  }
+
+  .component-card {
+    break-inside: avoid;
+  }
+} 

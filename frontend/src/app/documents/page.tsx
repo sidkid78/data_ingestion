@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { DocumentList } from '@/components/DocumentList';
 import { DocumentDetail } from '@/components/DocumentDetail';

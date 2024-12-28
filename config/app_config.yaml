@@ -4,63 +4,177 @@
 api:
   host: "0.0.0.0"
   port: 8000
-  debug: true
+  debug: false
   prefix: "/api/v1"
+  cors:
+    allow_origins: ["*"]
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 50
 
-# Data Sources
-data_sources:
+# Router Configuration
+routers:
+  ingestion:
+    prefix: "/ingestion"
+    tags: ["Ingestion"]
+    rate_limit: 50
+  documents:
+    prefix: "/documents"
+    tags: ["Documents"]
+    rate_limit: 100
   federal_register:
-    api_url: "https://www.federalregister.gov/api/v1"
+    prefix: "/federal-register"
+    tags: ["Federal Register"]
+    rate_limit: 30
+  standards:
+    prefix: "/standards"
+    tags: ["Standards"]
+    rate_limit: 50
+
+# Error Handling
+error_handling:
+  retries:
+    max_attempts: 3
+    backoff_factor: 2
+    max_delay: 30
+  custom_errors:
+    enable_detailed_messages: true
+    log_all_errors: true
+  fallback_strategies:
+    enable_circuit_breaker: true
+    timeout_seconds: 30
+
+# Performance Monitoring
+monitoring:
+  enabled: true
+  metrics:
+    request_duration: true
+    database_queries: true
+    memory_usage: true
+    cpu_usage: true
+  tracing:
+    enabled: true
+    sampling_rate: 0.1
+  alerting:
+    enabled: true
+    threshold_cpu_percent: 80
+    threshold_memory_percent: 80
+    threshold_error_rate: 0.05
+
+# Data Sources Configuration
+data_sources:
+  # Regulatory Databases
+  federal_register:
+    api_endpoint: "https://www.federalregister.gov/api/v1"
+    rate_limit: 1000
+    batch_size: 50
     update_interval: 3600  # seconds
+  
   far_dfars:
     base_url: "https://www.acquisition.gov"
     update_interval: 86400  # seconds
+    scraping_enabled: true
+  
+  state_local:
+    update_interval: 86400
+    sources: []  # List of state/local regulation sources
+  
+  # Industry Standards
+  standards:
+    local_path: "data/standards"
+    supported_formats:
+      - "pdf"
+      - "docx"
+      - "txt"
+    sources:
+      iso:
+        base_url: ""
+        api_key: ""
+      ansi:
+        base_url: ""
+        api_key: ""
+      nist:
+        base_url: ""
+        api_key: ""
+  
+  # Academic Publications
+  academic:
+    pubmed:
+      api_endpoint: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+      api_key: ""
+      batch_size: 100
+    jstor:
+      api_endpoint: ""
+      api_key: ""
+      batch_size: 50
+    arxiv:
+      api_endpoint: "http://export.arxiv.org/api"
+      batch_size: 100
 
 # Storage Configuration
 storage:
   azure_blob:
+    connection_string: ""
     container_name: "documents"
-    connection_string_env: "AZURE_STORAGE_CONNECTION_STRING"
+    versioning_enabled: true
+    retry_config:
+      max_attempts: 3
+      exponential_backoff: true
+    performance:
+      concurrent_uploads: 4
+      chunk_size_mb: 4
   
   postgresql:
     host: "localhost"
     port: 5432
-    database: "knowledge_db"
-    user_env: "POSTGRES_USER"
-    password_env: "POSTGRES_PASSWORD"
+    database: "data_ingestion"
+    user: "postgres"
+    password: ""
+    pool_size: 20
+    max_overflow: 10
+    enable_partitioning: true
+    performance_tuning:
+      statement_timeout_ms: 30000
+      idle_in_transaction_timeout_ms: 60000
+      effective_cache_size_mb: 4096
+      maintenance_work_mem_mb: 512
   
   neo4j:
     uri: "bolt://localhost:7687"
-    user_env: "NEO4J_USER"
-    password_env: "NEO4J_PASSWORD"
+    user: "neo4j"
+    password: ""
+    max_connection_pool_size: 50
+    connection_timeout: 30
 
-# Processing Settings
+# Processing Configuration
 processing:
   max_workers: 4
   batch_size: 100
   retry_attempts: 3
   retry_delay: 5  # seconds
-
-# Validation Rules
-validation:
-  yaml:
-    strict_mode: true
-    allow_duplicates: false
   
-  metadata:
-    required_fields:
-      - "title"
-      - "document_type"
-      - "publication_date"
-      - "source"
+  nuremberg_numbering:
+    enabled: true
+    prefix_pattern: "{source_type}-{year}-{sequence}"
+    conflict_resolution: "increment"
+  
+  metadata_enrichment:
+    ner_enabled: true
+    relationship_extraction: true
+    sentiment_analysis: true
+    spacy_model: "en_core_web_lg"
     
+  standardization:
+    date_format: "YYYY-MM-DD"
     controlled_vocabularies:
       document_types:
         - "regulation"
         - "standard"
         - "guidance"
         - "policy"
-      
       sources:
         - "federal_register"
         - "far_dfars"
@@ -68,8 +182,75 @@ validation:
         - "ansi"
         - "nist"
 
+# AI Integration
+ai:
+  azure_openai:
+    api_version: "2023-05-15"
+    deployment_name: ""
+    api_key: ""
+    endpoint: ""
+    
+  rag_agent:
+    max_query_tokens: 4000
+    temperature: 0.7
+    context_window: 16000
+    retrieval:
+      max_documents: 10
+      relevance_threshold: 0.75
+    
+  cognitive_search:
+    endpoint: ""
+    api_key: ""
+    index_name: "documents"
+    semantic_search_enabled: true
+
+# Validation Configuration
+validation:
+  yaml:
+    strict_mode: true
+    allow_empty: false
+    schema_version: "1.0"
+  
+  metadata:
+    required_fields:
+      - "title"
+      - "source"
+      - "date"
+      - "document_type"
+      - "nuremberg_number"
+    max_file_size_mb: 50
+    validate_relationships: true
+    
+  crosswalk:
+    enabled: true
+    validate_bidirectional: true
+    max_depth: 3
+
+# Security Configuration
+security:
+  encryption:
+    at_rest: true
+    in_transit: true
+  
+  rbac:
+    enabled: true
+    default_role: "reader"
+    
+  api_security:
+    oauth2_enabled: true
+    jwt_secret: ""
+    token_expiry: 3600
+
 # Logging Configuration
 logging:
   level: "INFO"
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  file: "logs/app.log" 
+  file: "logs/app.log"
+  rotation: true
+  max_size_mb: 100
+  backup_count: 5
+  enable_audit_trail: true
+  performance_logging:
+    slow_query_threshold_ms: 1000
+    log_memory_usage: true
+    log_cpu_usage: true 

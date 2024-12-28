@@ -3,11 +3,11 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from ..ingestion.acquisition.federal_register_ingestor import FederalRegisterIngestor
-from ..ingestion.acquisition.far_dfars_ingestor import FarDfarsIngestor
-from ..utils.config_loader import AppConfig
-from ..utils.error_handling import handle_exceptions, DataIngestionError
-from ..utils.logging import get_logger
+from ingestion.acquisition.federal_register_ingestor import FederalRegisterIngestor
+from ingestion.acquisition.far_dfars_ingestor import FarDfarsIngestor
+from utils.config_loader import AppConfig
+from utils.error_handling import handle_exceptions, DataIngestionError
+from utils.logging import get_logger
 
 router = APIRouter(prefix="/ingest", tags=["ingestion"])
 logger = get_logger(__name__)

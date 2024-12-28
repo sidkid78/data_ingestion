@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Document, Relationship } from '@/types';
+import './ForceGraph.css';
 
 interface ForceGraphProps {
   document: Document;
@@ -74,7 +75,7 @@ export function ForceGraph({ document, relationships, onNodeClick }: ForceGraphP
         .distance(100))
       .force('charge', d3.forceManyBody().strength(-200))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(d => (d.radius || 0) + 10));
+      .force('collision', d3.forceCollide().radius(d => ((d as Node).radius || 0) + 10));
 
     // Create arrow marker
     svg.append('defs').selectAll('marker')
@@ -103,13 +104,14 @@ export function ForceGraph({ document, relationships, onNodeClick }: ForceGraphP
 
     // Create nodes
     const node = svg.append('g')
-      .selectAll('g')
+      .selectAll<SVGGElement, Node>('g')
       .data(nodes)
       .join('g')
       .call(d3.drag<SVGGElement, Node>()
         .on('start', dragstarted)
         .on('drag', dragged)
-        .on('end', dragended))
+        .on('end', dragended)
+      )
       .on('click', (event, d) => onNodeClick(d.id));
 
     // Add circles to nodes
@@ -166,8 +168,7 @@ export function ForceGraph({ document, relationships, onNodeClick }: ForceGraphP
   return (
     <svg
       ref={svgRef}
-      className="w-full h-full"
-      style={{ minHeight: '400px' }}
+      className="w-full h-full force-graph-container"
     />
   );
 } 

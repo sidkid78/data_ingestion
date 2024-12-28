@@ -1,10 +1,12 @@
+"""Federal Register data ingestion module."""
+
 import aiohttp
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 import json
 
-from ..base_ingestor import BaseIngestor
-from ...utils.error_handling import DataIngestionError, retry
+from ingestion.base_ingestor import BaseIngestor
+from utils.error_handling import DataIngestionError, retry
 
 
 class FederalRegisterIngestor(BaseIngestor):

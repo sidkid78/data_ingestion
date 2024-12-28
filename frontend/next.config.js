@@ -5,15 +5,11 @@ const nextConfig = {
   images: {
     domains: [],
   },
-  // Enable experimental features if needed
   experimental: {
-    // serverActions: true,
   },
-  // Configure webpack if needed
-  webpack: (config, { isServer }) => {
-    // Add custom webpack configurations here
+  webpack: (config) => {
     return config;
   },
-}
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig;
