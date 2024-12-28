@@ -78,3 +78,41 @@ Thumbs.db
 # Cursor
 .cursorrules
 
+# Node Modules
+node_modules/
+
+# Large Files
+*.zip
+*.tar.gz
+*.7z
+*.rar
+*.iso
+*.vmdk
+*.ova
+*.dmg
+*.img
+*.bin
+*.bak
+*.dump
+*.sql
+*.psd
+*.ai
+*.indd
+*.idml
+*.pdf
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.jpeg
+*.jpg
+*.png
+*.gif
+*.tiff
+*.bmp
+
+next-swc.win32-x64-msvc.node
