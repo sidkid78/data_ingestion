@@ -100,7 +100,7 @@ class RAGAgent:
             
             return {
                 "document_id": document.get("id"),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(datetime.UTC).isoformat(),
                 "validation_results": validation_results,
                 "status": "compliant" if validation_results.get("is_compliant") else "non_compliant"
             }

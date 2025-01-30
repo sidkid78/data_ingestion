@@ -7,6 +7,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 import json
+import re
 
 from ..llm_integration import AzureLLMClient
 from ..aot.reasoning_engine import ReasoningResult, ReasoningStep, ComplianceCheck
@@ -162,13 +163,13 @@ class AIExplainer:
             """
             
             response = await self.llm_client.generate(prompt)
-            # TODO: Parse LLM response into structured format
+            parsed_response = self._parse_llm_response(response)
             
             return ExplanationComponent(
                 component_type="reasoning",
-                description="",  # From LLM response
-                importance_score=0.8,
-                supporting_data={},
+                description=parsed_response.get("explanation", ""),
+                importance_score=parsed_response.get("importance", 0.8),
+                supporting_data=parsed_response.get("supporting_data", {}),
                 visualization_data=self._prepare_reasoning_visualization(steps)
             )
             
@@ -198,13 +199,13 @@ class AIExplainer:
             """
             
             response = await self.llm_client.generate(prompt)
-            # TODO: Parse LLM response into structured format
+            parsed_response = self._parse_llm_response(response)
             
             return ExplanationComponent(
                 component_type="compliance",
-                description="",  # From LLM response
-                importance_score=0.9,
-                supporting_data={},
+                description=parsed_response.get("explanation", ""),
+                importance_score=parsed_response.get("importance", 0.9),
+                supporting_data=parsed_response.get("supporting_data", {}),
                 visualization_data=self._prepare_compliance_visualization(checks)
             )
             
@@ -234,13 +235,13 @@ class AIExplainer:
             """
             
             response = await self.llm_client.generate(prompt)
-            # TODO: Parse LLM response into structured format
+            parsed_response = self._parse_llm_response(response)
             
             return ExplanationComponent(
                 component_type="evidence",
-                description="",  # From LLM response
-                importance_score=0.7,
-                supporting_data={},
+                description=parsed_response.get("explanation", ""),
+                importance_score=parsed_response.get("importance", 0.7),
+                supporting_data=parsed_response.get("supporting_data", {}),
                 visualization_data=self._prepare_evidence_visualization(evidence)
             )
             
@@ -273,13 +274,13 @@ class AIExplainer:
             """
             
             response = await self.llm_client.generate(prompt)
-            # TODO: Parse LLM response into structured format
+            parsed_response = self._parse_llm_response(response)
             
             return ExplanationComponent(
                 component_type="counterfactual",
-                description="",  # From LLM response
-                importance_score=0.6,
-                supporting_data={},
+                description=parsed_response.get("explanation", ""),
+                importance_score=parsed_response.get("importance", 0.6),
+                supporting_data=parsed_response.get("supporting_data", {}),
                 visualization_data=self._prepare_counterfactual_visualization()
             )
             
@@ -417,4 +418,40 @@ class AIExplainer:
             "target_audience": target_audience,
             "reasoning_type": result.metadata.get("reasoning_type", "general"),
             "timestamp": datetime.utcnow().isoformat()
-        } 
+        }
+    
+    def _parse_llm_response(self, response: str) -> Dict:
+        """Parses the LLM response into a structured dictionary."""
+        
+        parsed_data = {}
+        
+        # Attempt to extract a JSON object if it exists
+        try:
+            json_match = re.search(r"\{.*\}", response, re.DOTALL)
+            if json_match:
+                parsed_data = json.loads(json_match.group(0))
+                return parsed_data
+        except json.JSONDecodeError:
+            logger.warning("LLM response did not contain valid JSON.")
+        
+        # Fallback to regex parsing if JSON is not found
+        explanation_match = re.search(r"Explanation:\s*(.*?)(?=\n|$)", response, re.DOTALL)
+        if explanation_match:
+            parsed_data["explanation"] = explanation_match.group(1).strip()
+        
+        importance_match = re.search(r"Importance:\s*([\d.]+)", response)
+        if importance_match:
+            try:
+                parsed_data["importance"] = float(importance_match.group(1))
+            except ValueError:
+                logger.warning("Could not parse importance score from LLM response.")
+        
+        supporting_data_match = re.search(r"Supporting Data:\s*(.*?)(?=\n|$)", response, re.DOTALL)
+        if supporting_data_match:
+            try:
+                parsed_data["supporting_data"] = json.loads(supporting_data_match.group(1).strip())
+            except json.JSONDecodeError:
+                logger.warning("Could not parse supporting data from LLM response.")
+                parsed_data["supporting_data"] = {}
+        
+        return parsed_data

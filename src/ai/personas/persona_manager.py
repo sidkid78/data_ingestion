@@ -169,6 +169,20 @@ class PersonaManager:
     
     def _is_role_compatible(self, persona_role: str, user_role: str) -> bool:
         """Check if persona role is compatible with user role."""
-        # TODO: Implement role compatibility logic
-        # For now, exact match or general role
-        return persona_role == user_role or persona_role == "general" 
+        
+        if persona_role == user_role or persona_role == "general":
+            return True
+        
+        # Define role hierarchies or compatibility rules here
+        role_compatibility = {
+            "legal_advisor": ["legal_analyst", "general"],
+            "compliance_officer": ["compliance_analyst", "general"],
+            "contract_manager": ["contract_specialist", "general"],
+            "procurement_officer": ["procurement_specialist", "general"],
+            "general": [] # General role is compatible with all
+        }
+        
+        if user_role in role_compatibility and persona_role in role_compatibility[user_role]:
+            return True
+        
+        return False
